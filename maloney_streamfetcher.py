@@ -45,7 +45,7 @@ class maloney_download:
       out_dir = outdir
     else:
       print("Given output directory doesn't exist")
-      return -1
+      return None
 
     # Get page content and id's
     if uid == None:
@@ -107,7 +107,7 @@ class maloney_download:
     for id in idx:
       print("  * {}".format(out_dir + "/" + xml_data[id]["mp3_name"]))
     print("------------------------------------------------------")
-    return 1
+    return None
   def curl_page(self, url):
     buffer = io.BytesIO()
     c = pycurl.Curl()
