@@ -1,4 +1,4 @@
-[Maloney Downloader](https://github.com/tschinz/maloney_downloader)
+[Maloney Streamfetcher](https://github.com/tschinz/maloney_streamfetcher)
 ================================
 
 This Python script let your download the latest Philip Maloney Episodes from the [SRF Website](http://www.srf.ch/sendungen/maloney).
@@ -39,8 +39,8 @@ Usage
 output_directory = None
 uid              = None
 ```
-  * if ``output_directory`` is deleted then the script location will be used ``./``
-  * if ``uid`` is deleted then all available episodes will be downloaded 
+  * if ``output_directory`` is ``None`` then the script location will be used ``./``
+  * if ``uid`` is ``None`` then all available episodes will be downloaded 
 
 
 * Execute script
@@ -48,7 +48,10 @@ uid              = None
 python maloney_streamfetcher.py
 ```
 
-* Use Cronjob for automatically execute the script every Monday at 24:00
+* Use Cronjob for automatically execute the script every Monday at 24:00.
+```bash
+crontab -e
+```
 ```bash
 0 * * * 1 python /location/to/maloney_streamfetcher.py
 ```
