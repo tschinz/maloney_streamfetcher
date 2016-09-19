@@ -35,69 +35,72 @@ class maloney_download:
     path_to_mid3v2   = "mid3v2"
 
     temp_directory   = "./temp"
-    srf_maloney_url  = "www.srf.ch/sendungen/maloney"
+    #srf_maloney_url  = "www.srf.ch/sendungen/maloney"
+    srf_maloney_url  = "http://www.srf.ch/sendungen/maloney/layout/set/ajax/Sendungen/maloney/sendungen/(offset)/"
     xml_url          = "http://www.srf.ch/webservice/ais/report/audio/withLiveStreams/"
 
-    # Get user constants
-    if outdir == None:
-      out_dir = "."
-    elif os.path.isdir(outdir):
-      out_dir = outdir
-    else:
-      print("Given output directory doesn't exist")
-      return None
-
-    # Get page content and id's
-    if uid == None:
-      id = [0,1,2,3,4,5,6,7,8,9]
-      print("No ID given, will download all available episodes from the mainpage")
-      # Get page info
-      page = self.curl_page(srf_maloney_url)
-      uids = self.parse_html(page)
-    else:
-      uids = [uid]
-
-    # Read XML Data
-    xml_data = self.get_xmldata(xml_url, uids)
-
-    # Download Files
-    print("Get Episodes")
-    # Create tmp directory
-    if not os.path.exists(temp_directory):
-      os.makedirs(temp_directory)
-    cnt = 0
-    idx = []
-    for episode in xml_data:
-      if os.path.isfile(out_dir + "/" + episode["mp3_name"]):
-        print("  Episode \"{} - {}\" already exists in the output folder {}".format(episode["year"], episode["title"], out_dir + "/" + episode["mp3_name"]))
-        print("    Skipping Episode ...")
+    for i in range(50,500,10):
+      url = srf_maloney_url + str(i)
+      # Get user constants
+      if outdir == None:
+        out_dir = "."
+      elif os.path.isdir(outdir):
+        out_dir = outdir
       else:
-        idx.append(cnt)
-        # Download with RTMP
-        print("  RTMP download...")
-        command = path_to_rtmpdump + " -r " + episode["rtmpurl"] + "  -o \"" + temp_directory + "/stream_dump.flv\""
-        self.system_command(command)
+        print("Given output directory doesn't exist")
+        return None
 
-        # Convert to MP3
-        print("  FFMPEG conversion flv to MP3...")
-        command = path_to_ffmpeg + " -y -loglevel panic -stats -i " + temp_directory + "/stream_dump.flv -vn -c:a copy \"" + out_dir + "/" + episode["mp3_name"] + "\""
-        self.system_command(command)
+      # Get page content and id's
+      if uid == None:
+        id = [0,1,2,3,4,5,6,7,8,9]
+        print("No ID given, will download all available episodes from the mainpage")
+        # Get page info
+        page = self.curl_page(url)
+        uids = self.parse_html(page)
+      else:
+        uids = [uid]
 
-        # Add ID3 Tag
-        print("  Adding ID3 Tags...")
-        command = ("{} -t \"{} - {}\" \"{}\"").format(path_to_mid3v2, episode["date"], episode["title"], out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-        command = ("{} -A \"{}\" \"{}\"").format(path_to_mid3v2, "Maloney Philip", out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-        command = ("{} -a \"{}\" \"{}\"").format(path_to_mid3v2, "Graf Roger", out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-        command = ("{} -g \"{}\" \"{}\"").format(path_to_mid3v2, "Book", out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-        command = ("{} -y \"{}\" \"{}\"").format(path_to_mid3v2, episode["year"], out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-        command = ("{} -c \"{}\" \"{}\"").format(path_to_mid3v2, episode["lead"], out_dir + "/" + episode["mp3_name"])
-        self.system_command(command)
-      cnt = cnt + 1
+      # Read XML Data
+      xml_data = self.get_xmldata(xml_url, uids)
+
+      # Download Files
+      print("Get Episodes")
+      # Create tmp directory
+      if not os.path.exists(temp_directory):
+        os.makedirs(temp_directory)
+      cnt = 0
+      idx = []
+      for episode in xml_data:
+        if os.path.isfile(out_dir + "/" + episode["mp3_name"]):
+          print("  Episode \"{} - {}\" already exists in the output folder {}".format(episode["year"], episode["title"], out_dir + "/" + episode["mp3_name"]))
+          print("    Skipping Episode ...")
+        else:
+          idx.append(cnt)
+          # Download with RTMP
+          print("  RTMP download...")
+          command = path_to_rtmpdump + " -r " + episode["rtmpurl"] + "  -o \"" + temp_directory + "/stream_dump.flv\""
+          self.system_command(command)
+
+          # Convert to MP3
+          print("  FFMPEG conversion flv to MP3...")
+          command = path_to_ffmpeg + " -y -loglevel panic -stats -i " + temp_directory + "/stream_dump.flv -vn -c:a copy \"" + out_dir + "/" + episode["mp3_name"] + "\""
+          self.system_command(command)
+
+          # Add ID3 Tag
+          print("  Adding ID3 Tags...")
+          command = ("{} -t \"{} - {}\" \"{}\"").format(path_to_mid3v2, episode["date"], episode["title"], out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+          command = ("{} -A \"{}\" \"{}\"").format(path_to_mid3v2, "Maloney Philip", out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+          command = ("{} -a \"{}\" \"{}\"").format(path_to_mid3v2, "Graf Roger", out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+          command = ("{} -g \"{}\" \"{}\"").format(path_to_mid3v2, "Book", out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+          command = ("{} -y \"{}\" \"{}\"").format(path_to_mid3v2, episode["year"], out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+          command = ("{} -c \"{}\" \"{}\"").format(path_to_mid3v2, episode["lead"], out_dir + "/" + episode["mp3_name"])
+          self.system_command(command)
+        cnt = cnt + 1
 
     # Deleting tmp directory
     shutil.rmtree(temp_directory)
