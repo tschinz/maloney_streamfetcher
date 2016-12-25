@@ -74,7 +74,7 @@ Versions Log
 Thanks
 ---
   * This work was inspired by [Stream Fetcher](https://www.ruinelli.ch/philip-maloney-stream-fetcher) of Ruinelli, a big thanks to him.
-  * Thanks for `v1.1` extention to TODO
+  * Thanks for `v1.1` extension to @dirtbit
 
 Licensing
 ---
