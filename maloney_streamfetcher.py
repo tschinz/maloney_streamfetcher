@@ -7,7 +7,7 @@ from xml.dom import minidom
 import os, io, re
 import shutil
 import argparse
-#import unicodedata
+import unicodedata
 
 #-------------------------------------------------------------------------------
 # Class Maloney Download
