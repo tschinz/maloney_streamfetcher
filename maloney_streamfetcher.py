@@ -158,7 +158,7 @@ class maloney_download:
   def parse_xml(self, xml):
     xml = unicodedata.normalize('NFKD', xml).encode('ascii','ignore') # we're not interested in any non-unicode data
     xmldoc = minidom.parseString(xml)
-    title = xmldoc.getElementsByTagName('title')[0].firstChild.data
+    title = xmldoc.getElementsByTagName('title')[0].firstChild.data.replace('/', '_')
     lead = xmldoc.getElementsByTagName('lead')[0].firstChild.data
     publishedDate = xmldoc.getElementsByTagName('publishedDate')[0].firstChild.data
     rtmpurl = xmldoc.getElementsByTagName('rtmpUrl')[0].firstChild.data
