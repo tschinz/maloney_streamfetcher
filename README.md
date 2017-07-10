@@ -5,7 +5,7 @@ This Python script let your download the latest Philip Maloney Episodes from the
 
 Requirements
 ---
-* ``Python 3.0`` but should be compatible with ``Python 2.x``
+* ``Python 3.0``
   * ``pycurl``
   * ``xml.dom``
 * ``rtmpdump`` - For downloading the rtmp stream
